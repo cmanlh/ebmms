@@ -31,6 +31,11 @@
             <artifactId>kryo-serializers</artifactId>
             <version>0.42</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.2.5.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <modules>

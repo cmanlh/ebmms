@@ -12,6 +12,4 @@
     <artifactId>ebmms-server</artifactId>
     <packaging>jar</packaging>
     <name>ebmms-server</name>
-
-
 </project>
