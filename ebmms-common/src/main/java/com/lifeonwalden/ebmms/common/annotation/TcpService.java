@@ -13,7 +13,7 @@ public @interface TcpService {
     /**
      * Assign a name to this tcp service
      * The method using is higher priority than the type using
-     *
+     * <p>
      * Type annotated as A.B, method annotated as C, the full name is A.B.C
      * Type without annotation, and method annotated as C, the full name is C
      *
@@ -28,4 +28,9 @@ public @interface TcpService {
      * @return
      */
     int version() default 0;
+
+    /**
+     * Description
+     */
+    String description() default "";
 }
