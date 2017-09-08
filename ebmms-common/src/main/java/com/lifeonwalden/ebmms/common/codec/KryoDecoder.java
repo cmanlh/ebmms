@@ -1,5 +1,6 @@
 package com.lifeonwalden.ebmms.common.codec;
 
+import com.esotericsoftware.kryo.Kryo;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;

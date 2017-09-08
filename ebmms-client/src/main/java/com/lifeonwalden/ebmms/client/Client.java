@@ -3,6 +3,7 @@ package com.lifeonwalden.ebmms.client;
 import com.lifeonwalden.ebmms.client.concurrent.ResponseStorehouse;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
+import com.lifeonwalden.ebmms.common.codec.RequestEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -27,11 +28,11 @@ public class Client {
     public Client(String host, int port, ResponseStorehouse storehouse) throws InterruptedException {
         group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(group).option(ChannelOption.SO_KEEPALIVE, true).channel(NioSocketChannel.class)
+        bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new LengthFieldPrepender(8), new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8));
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8)).addLast(new LengthFieldPrepender(8), new RequestEncoder());
                     }
                 });
 
@@ -42,6 +43,7 @@ public class Client {
 
             throw e;
         }
+        this.storehouse = storehouse;
     }
 
     public Response send(Request request) {
@@ -51,12 +53,17 @@ public class Client {
         return storehouse.take(request.getMsgId());
     }
 
+    public boolean isActive() {
+        return channel.isActive();
+    }
+
     public void close() {
         try {
             channel.closeFuture().sync();
-            group.shutdownGracefully();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Failed to close the channel.", e);
+        } finally {
+            group.shutdownGracefully();
         }
 
     }

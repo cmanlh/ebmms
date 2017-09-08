@@ -12,4 +12,12 @@
     <artifactId>ebmms-server</artifactId>
     <packaging>jar</packaging>
     <name>ebmms-server</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lifeonwalden</groupId>
+            <artifactId>ebmms-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
