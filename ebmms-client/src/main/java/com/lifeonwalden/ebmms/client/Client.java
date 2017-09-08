@@ -1,9 +1,11 @@
 package com.lifeonwalden.ebmms.client;
 
-import com.lifeonwalden.ebmms.client.concurrent.ResponseStorehouse;
+import com.lifeonwalden.ebmms.client.handler.MsgProcessor;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.codec.RequestEncoder;
+import com.lifeonwalden.ebmms.common.codec.ResponseDecoder;
+import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -23,16 +25,18 @@ public class Client {
 
     private Channel channel;
     private EventLoopGroup group;
-    private ResponseStorehouse storehouse;
+    private MsgStorehouse<Response> storehouse;
 
-    public Client(String host, int port, ResponseStorehouse storehouse) throws InterruptedException {
+    public Client(String host, int port, MsgStorehouse<Response> storehouse) throws InterruptedException {
         group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8)).addLast(new LengthFieldPrepender(8), new RequestEncoder());
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new ResponseDecoder())
+                                .addLast(new LengthFieldPrepender(8), new RequestEncoder())
+                                .addLast(new MsgProcessor(storehouse));
                     }
                 });
 
@@ -59,7 +63,7 @@ public class Client {
 
     public void close() {
         try {
-            channel.closeFuture().sync();
+            channel.close().sync();
         } catch (InterruptedException e) {
             logger.error("Failed to close the channel.", e);
         } finally {

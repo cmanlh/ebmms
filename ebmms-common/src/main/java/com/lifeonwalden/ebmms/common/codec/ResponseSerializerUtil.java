@@ -6,7 +6,7 @@ import com.lifeonwalden.ebmms.common.bean.Response;
 
 import static com.esotericsoftware.kryo.Kryo.NULL;
 
-public class ResponseSerializerUtil {
+public interface ResponseSerializerUtil {
     static int estimateBufferSize(Response response) {
         int bufferSize = 12;
         if (null != response.getMsgId()) {
@@ -22,19 +22,19 @@ public class ResponseSerializerUtil {
         return bufferSize;
     }
 
-    public void write(Output output, Response object) {
+    static void write(Output output, Response object) {
         output.writeString(object.getMsgId());
         byte[] returnVal = object.getReturnVal();
         if (null == returnVal) {
             output.writeVarInt(NULL, true);
-            return;
+        } else {
+            output.writeVarInt(returnVal.length + 1, true);
+            output.writeBytes(returnVal);
         }
-        output.writeVarInt(returnVal.length + 1, true);
-        output.writeBytes(returnVal);
         output.writeString(object.getErrMsg());
     }
 
-    public Response read(Input input) {
+    static Response read(Input input) {
         Response response = new Response();
         response.setMsgId(input.readString());
         int length = input.readVarInt(true);

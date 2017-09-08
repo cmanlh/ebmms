@@ -1,6 +1,8 @@
 package com.lifeonwalden.ebmms.server;
 
 import com.lifeonwalden.ebmms.common.codec.RequestDecoder;
+import com.lifeonwalden.ebmms.common.codec.ResponseEncoder;
+import com.lifeonwalden.ebmms.server.handler.MsgProcessor;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -10,6 +12,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 
 public class ServerTest {
 
@@ -39,7 +42,9 @@ public class ServerTest {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new RequestDecoder());
+                            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new RequestDecoder())
+                                    .addLast(new LengthFieldPrepender(8), new ResponseEncoder())
+                                    .addLast(new MsgProcessor());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
