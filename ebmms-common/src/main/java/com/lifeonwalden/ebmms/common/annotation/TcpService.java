@@ -1,5 +1,7 @@
 package com.lifeonwalden.ebmms.common.annotation;
 
+import org.springframework.stereotype.Service;
+
 import java.lang.annotation.*;
 
 /**
@@ -9,7 +11,16 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Service
 public @interface TcpService {
+    /**
+     * The value may indicate a suggestion for a logical component name,
+     * to be turned into a Spring bean in case of an autodetected component.
+     *
+     * @return the suggested component name, if any
+     */
+    String value() default "";
+
     /**
      * Assign a name to this tcp service
      * The method using is higher priority than the type using

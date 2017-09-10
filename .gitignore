@@ -31,3 +31,4 @@ hs_err_pid*
 /ebmms-common/target/
 /ebmms-client/target/
 /ebmms-register/target/
+/ebmms-proxy/target/

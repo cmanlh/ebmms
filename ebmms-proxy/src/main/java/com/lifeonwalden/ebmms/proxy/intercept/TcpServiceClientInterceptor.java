@@ -1,18 +1,31 @@
 package com.lifeonwalden.ebmms.proxy.intercept;
 
+import com.lifeonwalden.ebmms.common.bean.Response;
+import com.lifeonwalden.ebmms.common.util.UUID;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+
+import java.lang.reflect.Method;
 
 public class TcpServiceClientInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        System.out.println(invocation.getMethod().getName());
-        System.out.println(invocation.getArguments().getClass().getName());
-        System.out.println(invocation.getMethod().getName());
-        System.out.println(invocation.getMethod().getName());
-        System.out.println(invocation.getMethod().getName());
-        System.out.println(invocation.getMethod().getName());
+        Method method = invocation.getMethod();
+        System.out.println(method.getName());
+//        System.out.println(invocation.getThis().getClass().getName());
+//        System.out.println(invocation.proceed() == null);
+//        System.out.println(invocation.getClass().getName());
+        Object[] arguments = invocation.getArguments();
+        if (null != arguments) {
+            for (Object obj : arguments) {
+                if (null != obj) {
+                    System.out.println(obj.getClass().getName());
+                }
+            }
+        }
 
-        return null;
+        Response response = new Response();
+        response.setMsgId(UUID.fetch());
+        return response;
     }
 }

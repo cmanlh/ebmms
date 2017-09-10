@@ -27,23 +27,29 @@ public class Response implements Serializable {
         return msgId;
     }
 
-    public void setMsgId(String msgId) {
+    public Response setMsgId(String msgId) {
         this.msgId = msgId;
+
+        return this;
     }
 
     public byte[] getReturnVal() {
         return returnVal;
     }
 
-    public void setReturnVal(byte[] returnVal) {
+    public Response setReturnVal(byte[] returnVal) {
         this.returnVal = returnVal;
+
+        return this;
     }
 
     public String getErrMsg() {
         return errMsg;
     }
 
-    public void setErrMsg(String errMsg) {
+    public Response setErrMsg(String errMsg) {
         this.errMsg = errMsg;
+
+        return this;
     }
 }

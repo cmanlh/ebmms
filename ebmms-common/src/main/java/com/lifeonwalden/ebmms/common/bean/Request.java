@@ -31,31 +31,39 @@ public class Request implements Serializable {
         return msgId;
     }
 
-    public void setMsgId(String msgId) {
+    public Request setMsgId(String msgId) {
         this.msgId = msgId;
+
+        return this;
     }
 
     public long getServiceId() {
         return serviceId;
     }
 
-    public void setServiceId(long serviceId) {
+    public Request setServiceId(long serviceId) {
         this.serviceId = serviceId;
+
+        return this;
     }
 
     public String getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public Request setMethod(String method) {
         this.method = method;
+
+        return this;
     }
 
     public byte[] getParameter() {
         return parameter;
     }
 
-    public void setParameter(byte[] parameter) {
+    public Request setParameter(byte[] parameter) {
         this.parameter = parameter;
+
+        return this;
     }
 }
