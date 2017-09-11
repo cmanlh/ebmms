@@ -12,9 +12,6 @@ public class TcpServiceClientInterceptor implements MethodInterceptor {
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Method method = invocation.getMethod();
         System.out.println(method.getName());
-//        System.out.println(invocation.getThis().getClass().getName());
-//        System.out.println(invocation.proceed() == null);
-//        System.out.println(invocation.getClass().getName());
         Object[] arguments = invocation.getArguments();
         if (null != arguments) {
             for (Object obj : arguments) {
