@@ -13,9 +13,9 @@ public class Request implements Serializable {
     private String msgId;
 
     /**
-     * remote service id
+     * remote service
      */
-    private long serviceId;
+    private String service;
 
     /**
      * remote operation method
@@ -37,12 +37,12 @@ public class Request implements Serializable {
         return this;
     }
 
-    public long getServiceId() {
-        return serviceId;
+    public String getService() {
+        return service;
     }
 
-    public Request setServiceId(long serviceId) {
-        this.serviceId = serviceId;
+    public Request setService(String service) {
+        this.service = service;
 
         return this;
     }

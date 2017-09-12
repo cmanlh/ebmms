@@ -24,7 +24,7 @@ public interface RequestSerializerUtil {
 
     static void write(Output output, Request object) {
         output.writeString(object.getMsgId());
-        output.writeLong(object.getServiceId(), false);
+        output.writeString(object.getService());
         output.writeString(object.getMethod());
         byte[] parameter = object.getParameter();
         if (null == parameter) {
@@ -38,7 +38,7 @@ public interface RequestSerializerUtil {
     static Request read(Input input) {
         Request request = new Request();
         request.setMsgId(input.readString());
-        request.setServiceId(input.readLong(false));
+        request.setService(input.readString());
         request.setMethod(input.readString());
         int length = input.readVarInt(true);
         if (0 != length) {

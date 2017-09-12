@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ebmms-client</artifactId>
+    <artifactId>ebmms-clientImpl</artifactId>
     <packaging>jar</packaging>
-    <name>ebmms-client</name>
+    <name>ebmms-clientImpl</name>
 
     <dependencies>
         <dependency>

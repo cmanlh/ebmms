@@ -8,9 +8,9 @@ import java.io.Serializable;
 public class TcpServiceBean implements Serializable {
     private static final long serialVersionUID = -1404424653678764305L;
     /**
-     * service name
+     * the service interface class
      */
-    private String name;
+    private String serviceInterface;
 
     /**
      * service version
@@ -37,51 +37,63 @@ public class TcpServiceBean implements Serializable {
      */
     private boolean available;
 
-    public String getName() {
-        return name;
+    public String getServiceInterface() {
+        return serviceInterface;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public TcpServiceBean setServiceInterface(String serviceInterface) {
+        this.serviceInterface = serviceInterface;
+
+        return this;
     }
 
     public int getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public TcpServiceBean setVersion(int version) {
         this.version = version;
+
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public TcpServiceBean setDescription(String description) {
         this.description = description;
+
+        return this;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public TcpServiceBean setId(long id) {
         this.id = id;
+
+        return this;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public TcpServiceBean setAddress(String address) {
         this.address = address;
+
+        return this;
     }
 
     public boolean isAvailable() {
         return available;
     }
 
-    public void setAvailable(boolean available) {
+    public TcpServiceBean setAvailable(boolean available) {
         this.available = available;
+
+        return this;
     }
 }

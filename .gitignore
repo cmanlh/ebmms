@@ -29,6 +29,6 @@ hs_err_pid*
 #temporary files
 /src/
 /ebmms-common/target/
-/ebmms-client/target/
+/ebmms-clientImpl/target/
 /ebmms-register/target/
 /ebmms-proxy/target/

@@ -1,5 +1,6 @@
 package com.lifeonwalden.ebmms.proxy.intercept;
 
+import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.util.UUID;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -8,6 +9,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import java.lang.reflect.Method;
 
 public class TcpServiceClientInterceptor implements MethodInterceptor {
+
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Method method = invocation.getMethod();
@@ -17,6 +19,9 @@ public class TcpServiceClientInterceptor implements MethodInterceptor {
             for (Object obj : arguments) {
                 if (null != obj) {
                     System.out.println(obj.getClass().getName());
+                    if(obj instanceof Request){
+                        System.out.println(((Request) obj).getMsgId());
+                    }
                 }
             }
         }

@@ -50,7 +50,7 @@
     </dependencies>
 
     <modules>
-        <module>ebmms-client</module>
+        <module>ebmms-clientImpl</module>
         <module>ebmms-common</module>
         <module>ebmms-server</module>
         <module>ebmms-register</module>

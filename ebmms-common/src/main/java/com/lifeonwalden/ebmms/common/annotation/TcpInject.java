@@ -2,21 +2,10 @@ package com.lifeonwalden.ebmms.common.annotation;
 
 import java.lang.annotation.*;
 
-/**
- * annotation for tcp service
- */
-
-@Target({ElementType.TYPE})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface TcpService {
-    /**
-     * the service interface class
-     *
-     * @return
-     */
-    Class serviceInterface();
-
+public @interface TcpInject {
     /**
      * Assign a version number to this tcp service
      * The method annotation is higher priority than type annotation
@@ -26,7 +15,12 @@ public @interface TcpService {
     int version() default 0;
 
     /**
-     * Description
+     * allowed maximum times of retry
      */
-    String description() default "";
+    int retry() default 1;
+
+    /**
+     * timeout of service calling
+     */
+    int timeout() default 0;
 }
