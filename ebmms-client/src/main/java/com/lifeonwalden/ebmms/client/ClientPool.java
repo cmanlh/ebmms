@@ -9,6 +9,7 @@ import org.apache.logging.log4j.message.FormattedMessage;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -35,6 +36,11 @@ public class ClientPool implements Client {
      * current size of alive client
      */
     private AtomicInteger aliveSize;
+
+    /**
+     * current size of working client
+     */
+    private AtomicInteger workingSize;
 
     /**
      * tcp service host
@@ -67,6 +73,18 @@ public class ClientPool implements Client {
         this.pool = new ArrayBlockingQueue<>(this.maxSize);
         this.storehouse = new MsgStorehouse(1024 > this.maxSize ? 1024 : this.maxSize);
         aliveSize = new AtomicInteger(0);
+        workingSize = new AtomicInteger(0);
+
+        for (int i = 0; i < this.coreSize; i++) {
+            try {
+                pool.put(new ClientImpl(this.host, this.port, this.storehouse));
+                aliveSize.incrementAndGet();
+            } catch (InterruptedException e) {
+                logger.error(new FormattedMessage("create a new client to {}:{} failed", this.host, this.port), e);
+
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public int getMaxSize() {
@@ -99,10 +117,16 @@ public class ClientPool implements Client {
 
     @Override
     public Response send(Request request) {
-        Client client = pool.poll();
+        Client client = null;
         try {
-            if (null == client && aliveSize.incrementAndGet() <= this.maxSize) {
+            client = pool.poll(500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (null == client && aliveSize.get() < this.maxSize) {
                 try {
+                    aliveSize.incrementAndGet();
                     client = new ClientImpl(this.host, this.port, this.storehouse);
                 } catch (InterruptedException e) {
                     aliveSize.decrementAndGet();
@@ -114,6 +138,7 @@ public class ClientPool implements Client {
             }
 
             if (null != client) {
+                workingSize.incrementAndGet();
                 return client.send(request);
             } else {
                 throw new RuntimeException("no available connection.");
@@ -121,7 +146,13 @@ public class ClientPool implements Client {
         } finally {
             if (null != client) {
                 try {
-                    pool.put(client);
+                    if (client.isActive()) {
+                        pool.put(client);
+                    } else {
+                        aliveSize.decrementAndGet();
+                    }
+                    System.out.print(" ".concat(String.valueOf(workingSize.get())));
+                    workingSize.decrementAndGet();
                 } catch (InterruptedException e) {
                     logger.error("Failed to return connection back to pool", e);
 
@@ -153,5 +184,10 @@ public class ClientPool implements Client {
             client.close();
             aliveSize.decrementAndGet();
         });
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
     }
 }

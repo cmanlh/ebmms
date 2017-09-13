@@ -13,11 +13,11 @@ public class MsgStorehouse<T> {
     private ConcurrentHashMap<String, BlockingQueue<T>> storehouse;
 
     public MsgStorehouse(int initialCapacity) {
-        storehouse = new ConcurrentHashMap<>(1024);
+        storehouse = new ConcurrentHashMap<>(initialCapacity);
     }
 
     public void buy(String msgId) {
-        storehouse.putIfAbsent(msgId, new ArrayBlockingQueue<T>(1));
+        storehouse.putIfAbsent(msgId, new ArrayBlockingQueue<>(1));
     }
 
     public void put(String msgId, T msg) {

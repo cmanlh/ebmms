@@ -49,6 +49,7 @@ public class ClientImpl implements Client {
 
     @Override
     public Response send(Request request) {
+        request.setMsgId(channel.id().asLongText());
         storehouse.buy(request.getMsgId());
         channel.writeAndFlush(request);
 
@@ -65,6 +66,7 @@ public class ClientImpl implements Client {
         return send(request);
     }
 
+    @Override
     public boolean isActive() {
         return channel.isActive();
     }

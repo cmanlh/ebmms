@@ -31,5 +31,7 @@ public interface Client {
      */
     Response send(Request request, int retry, int timeout);
 
+    boolean isActive();
+
     void close();
 }

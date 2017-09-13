@@ -9,6 +9,9 @@ import static com.esotericsoftware.kryo.Kryo.NULL;
 public interface RequestSerializerUtil {
     static int estimateBufferSize(Request request) {
         int bufferSize = 12;
+        if (null != request.getService()) {
+            bufferSize += request.getService().getBytes().length * 1.5;
+        }
         if (null != request.getMsgId()) {
             bufferSize += request.getMsgId().getBytes().length * 1.5;
         }
