@@ -6,7 +6,13 @@ import java.io.Serializable;
  * service information bean
  */
 public class TcpServiceBean implements Serializable {
-    private static final long serialVersionUID = -1404424653678764305L;
+    private static final long serialVersionUID = -4511599476707702960L;
+
+    /**
+     * global id for service, handled by register
+     */
+    private long id;
+
     /**
      * the service interface class
      */
@@ -23,19 +29,29 @@ public class TcpServiceBean implements Serializable {
     private String description;
 
     /**
-     * global id for service, handled by register
+     * host of service
      */
-    private long id;
+    private String host;
 
     /**
-     * address of service
+     * port of service
      */
-    private String address;
+    private int port;
 
     /**
      * is the service available
      */
     private boolean available;
+
+    public long getId() {
+        return id;
+    }
+
+    public TcpServiceBean setId(long id) {
+        this.id = id;
+
+        return this;
+    }
 
     public String getServiceInterface() {
         return serviceInterface;
@@ -67,22 +83,22 @@ public class TcpServiceBean implements Serializable {
         return this;
     }
 
-    public long getId() {
-        return id;
+    public String getHost() {
+        return host;
     }
 
-    public TcpServiceBean setId(long id) {
-        this.id = id;
+    public TcpServiceBean setHost(String host) {
+        this.host = host;
 
         return this;
     }
 
-    public String getAddress() {
-        return address;
+    public int getPort() {
+        return port;
     }
 
-    public TcpServiceBean setAddress(String address) {
-        this.address = address;
+    public TcpServiceBean setPort(int port) {
+        this.port = port;
 
         return this;
     }

@@ -18,7 +18,6 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Response> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Response msg) throws Exception {
-        Thread.sleep(1000);
         storehouse.put(msg.getMsgId(), msg);
     }
 

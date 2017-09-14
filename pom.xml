@@ -54,6 +54,5 @@
         <module>ebmms-common</module>
         <module>ebmms-server</module>
         <module>ebmms-register</module>
-        <module>ebmms-proxy</module>
     </modules>
 </project>
