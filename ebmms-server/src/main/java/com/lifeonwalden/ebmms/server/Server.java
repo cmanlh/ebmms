@@ -2,6 +2,7 @@ package com.lifeonwalden.ebmms.server;
 
 import com.lifeonwalden.ebmms.common.codec.RequestDecoder;
 import com.lifeonwalden.ebmms.common.codec.ResponseEncoder;
+import com.lifeonwalden.ebmms.proxy.TcpServiceDiscovery;
 import com.lifeonwalden.ebmms.server.handler.MsgProcessor;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,9 @@ public class Server implements InitializingBean, DisposableBean {
     @Value(value = "${ebmms.server.port ?:8080}")
     private int port;
 
+    @Autowired
+    private TcpServiceDiscovery tcpServiceDiscovery;
+
     private EventLoopGroup bossGroup;
 
     private EventLoopGroup workerGroup;
@@ -54,7 +59,7 @@ public class Server implements InitializingBean, DisposableBean {
                     public void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new RequestDecoder())
                                 .addLast(new LengthFieldPrepender(8), new ResponseEncoder())
-                                .addLast(new MsgProcessor());
+                                .addLast(new MsgProcessor(tcpServiceDiscovery));
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, this.workerBackLogSize)

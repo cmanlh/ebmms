@@ -13,11 +13,12 @@ public class ServerTest {
     public static void main(String[] args) throws Exception {
         ApplicationContext appContext = new AnnotationConfigApplicationContext(ServerTest.class);
         System.out.println("Start Over");
-//        ((Server) appContext.getBean("server")).destroy();
     }
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+        PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigure = new PropertySourcesPlaceholderConfigurer();
+
+        return propertySourcesPlaceholderConfigure;
     }
 }

@@ -27,7 +27,6 @@ hs_err_pid*
 *.iml
 
 #temporary files
-/src/
 /ebmms-common/target/
 /ebmms-clientImpl/target/
 /ebmms-register/target/

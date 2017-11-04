@@ -1,28 +1,22 @@
 package com.lifeonwalden.ebmms.common.codec;
 
 import com.esotericsoftware.kryo.Kryo;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
-
-import java.nio.charset.Charset;
-import java.util.List;
+import com.esotericsoftware.kryo.pool.KryoFactory;
+import com.esotericsoftware.kryo.pool.KryoPool;
 
 /**
  * Kryo serialization byte decoder
  */
-public class KryoDecoder extends ByteToMessageDecoder {
-    public KryoDecoder() {
-        super();
-        System.out.println("new KryoDecoder");
-    }
+public class KryoDecoder {
+    private static KryoFactory factory = () -> {
+        Kryo kryo = new Kryo();
+        return kryo;
+    };
 
-    @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        if (in.readableBytes() > 0) {
-            CharSequence charSequence = in.readCharSequence(in.readableBytes(), Charset.defaultCharset());
-            System.out.println(charSequence.toString());
-            out.add(charSequence);
-        }
+    private KryoPool pool = new KryoPool.Builder(factory).softReferences().build();
+
+    public byte[] encode(Object obj) {
+        Kryo kryo = pool.borrow();
+        kryo.getDefaultSerializer()
     }
 }
