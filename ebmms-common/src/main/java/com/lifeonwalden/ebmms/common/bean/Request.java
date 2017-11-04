@@ -25,7 +25,7 @@ public class Request implements Serializable {
     /**
      * request parameter
      */
-    private byte[] parameter;
+    private Object[] parameters;
 
     public String getMsgId() {
         return msgId;
@@ -57,12 +57,12 @@ public class Request implements Serializable {
         return this;
     }
 
-    public byte[] getParameter() {
-        return parameter;
+    public Object[] getParameters() {
+        return parameters;
     }
 
-    public Request setParameter(byte[] parameter) {
-        this.parameter = parameter;
+    public Request setParameters(Object[] parameters) {
+        this.parameters = parameters;
 
         return this;
     }

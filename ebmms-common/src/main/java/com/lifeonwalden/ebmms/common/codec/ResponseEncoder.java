@@ -7,11 +7,15 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+import java.io.ByteArrayOutputStream;
+
 public class ResponseEncoder extends MessageToByteEncoder<Response> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Response msg, ByteBuf out) throws Exception {
-        Output output = new Output(ResponseSerializerUtil.estimateBufferSize(msg));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Output output = new Output(baos);
         ResponseSerializerUtil.write(output, msg);
-        out.writeBytes(output.toBytes());
+        output.flush();
+        out.writeBytes(baos.toByteArray());
     }
 }

@@ -23,18 +23,24 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Request> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Request msg) throws Exception {
-        Object service = this.tcpServiceDiscovery.getServiceIndex().get(msg.getService());
-        Method method = service.getClass().getMethod(msg.getMethod());
-
         Response response = new Response();
         response.setMsgId(msg.getMsgId());
         try {
             Object result = null;
-            if (null != msg.getParameter() && msg.getParameter().length > 0) {
-
+            Object[] parameters = msg.getParameters();
+            Object service = this.tcpServiceDiscovery.getServiceIndex().get(msg.getService());
+            if (null != parameters && parameters.length > 0) {
+                Class[] paramTypes = new Class[parameters.length];
+                for (int i = 0; i < parameters.length; i++) {
+                    paramTypes[i] = parameters[i].getClass();
+                }
+                Method method = service.getClass().getMethod(msg.getMethod(), paramTypes);
+                result = method.invoke(service, parameters);
             } else {
+                Method method = service.getClass().getMethod(msg.getMethod());
                 result = method.invoke(service);
             }
+            response.setResult(result);
         } catch (Throwable e) {
             logger.error(new FormattedMessage("Failed to call service {}", msg.getService()), e);
 

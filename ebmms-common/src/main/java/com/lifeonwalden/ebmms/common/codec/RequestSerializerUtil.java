@@ -7,35 +7,21 @@ import com.lifeonwalden.ebmms.common.bean.Request;
 import static com.esotericsoftware.kryo.Kryo.NULL;
 
 public interface RequestSerializerUtil {
-    static int estimateBufferSize(Request request) {
-        int bufferSize = 12;
-        if (null != request.getService()) {
-            bufferSize += request.getService().getBytes().length * 1.5;
-        }
-        if (null != request.getMsgId()) {
-            bufferSize += request.getMsgId().getBytes().length * 1.5;
-        }
-        if (null != request.getMethod()) {
-            bufferSize += request.getMethod().getBytes().length * 1.5;
-        }
-        if (null != request.getParameter()) {
-            bufferSize += request.getParameter().length + 128;
-        }
-
-        return bufferSize;
-    }
-
     static void write(Output output, Request object) {
         output.writeString(object.getMsgId());
         output.writeString(object.getService());
         output.writeString(object.getMethod());
-        byte[] parameter = object.getParameter();
-        if (null == parameter) {
+        Object[] parameters = object.getParameters();
+        if (null == parameters) {
             output.writeVarInt(NULL, true);
             return;
         }
-        output.writeVarInt(parameter.length + 1, true);
-        output.writeBytes(parameter);
+        output.writeVarInt(parameters.length, true);
+        for (Object param : parameters) {
+            byte[] encoded = KryoCoder.encodeWithClass(param);
+            output.writeVarInt(encoded.length, true);
+            output.writeBytes(encoded);
+        }
     }
 
     static Request read(Input input) {
@@ -44,8 +30,12 @@ public interface RequestSerializerUtil {
         request.setService(input.readString());
         request.setMethod(input.readString());
         int length = input.readVarInt(true);
-        if (0 != length) {
-            request.setParameter(input.readBytes(length - 1));
+        if (NULL != length) {
+            Object[] parameters = new Object[length];
+            for (int i = 0; i < length; i++) {
+                parameters[i] = KryoCoder.decodeWithClass(input.readBytes(input.readVarInt(true)));
+            }
+            request.setParameters(parameters);
         }
 
         return request;

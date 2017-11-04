@@ -16,7 +16,7 @@ public class Response implements Serializable {
     /**
      * the return value
      */
-    private byte[] returnVal;
+    private Object result;
 
     /**
      * error message when exception happened
@@ -33,12 +33,12 @@ public class Response implements Serializable {
         return this;
     }
 
-    public byte[] getReturnVal() {
-        return returnVal;
+    public Object getResult() {
+        return result;
     }
 
-    public Response setReturnVal(byte[] returnVal) {
-        this.returnVal = returnVal;
+    public Response setResult(Object result) {
+        this.result = result;
 
         return this;
     }
