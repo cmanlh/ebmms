@@ -21,18 +21,19 @@ public class ClientPoolTest {
 
     @Test
     public void multiRequesTest() {
-        ClientPool clientPool = new ClientPool("localhost", 8080, 10, 1024, 50);
+        ClientPool clientPool = new ClientPool("localhost", 8080, 10, 1024, 50, 15);
         AtomicInteger counter = new AtomicInteger(0);
         AtomicInteger failedCounter = new AtomicInteger(0);
         List<Thread> threadList = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
+            final int index = i;
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     Request request = new Request();
                     request.setService(RemoteService.class.getName().concat("0"));
                     request.setMethod("rememberMyName");
-                    String msg = "msg".concat(String.valueOf(System.currentTimeMillis()));
+                    String msg = "msg".concat(String.valueOf(index));
                     Object[] parameters = new Object[]{String.valueOf(msg)};
                     request.setParameters(parameters);
                     try {

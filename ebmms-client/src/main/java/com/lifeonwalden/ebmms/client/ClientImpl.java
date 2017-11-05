@@ -27,14 +27,14 @@ public class ClientImpl implements Client {
     private EventLoopGroup group;
     private MsgStorehouse<Response> storehouse;
 
-    public ClientImpl(String host, int port, MsgStorehouse<Response> storehouse) throws InterruptedException {
+    public ClientImpl(String host, int port, MsgStorehouse<Response> storehouse, int timeoutSeconds) throws InterruptedException {
         group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ReadTimeoutHandler(5))
+                        ch.pipeline().addLast(new ReadTimeoutHandler(timeoutSeconds))
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new ResponseDecoder())
                                 .addLast(new LengthFieldPrepender(8), new RequestEncoder())
                                 .addLast(new MsgProcessor(storehouse));

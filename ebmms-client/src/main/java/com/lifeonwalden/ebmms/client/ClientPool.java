@@ -52,23 +52,30 @@ public class ClientPool implements Client {
      */
     private int port;
 
+    private int timeoutSeconds = 15;
+
     private MsgStorehouse<Response> storehouse;
 
     public ClientPool(String host, int port) {
-        this(host, port, 1, 1, 1);
+        this(host, port, 1, 1, 1, 15);
     }
 
-    public ClientPool(String host, int port, int coreSize) {
-        this(host, port, coreSize, coreSize, coreSize);
+    public ClientPool(String host, int port, int timeoutSeconds) {
+        this(host, port, 1, 1, 1, timeoutSeconds);
     }
 
-    public ClientPool(String host, int port, int coreSize, int maxSize, int idleSize) {
+    public ClientPool(String host, int port, int coreSize, int timeoutSeconds) {
+        this(host, port, coreSize, coreSize, coreSize, timeoutSeconds);
+    }
+
+    public ClientPool(String host, int port, int coreSize, int maxSize, int idleSize, int timeoutSeconds) {
         this.host = host;
         this.port = port;
         this.coreSize = coreSize <= 0 ? this.coreSize : coreSize;
         this.maxSize = maxSize < this.coreSize ? this.coreSize : maxSize;
         this.idleSize = (idleSize < this.coreSize ? this.coreSize : idleSize);
         this.idleSize = this.idleSize > this.maxSize ? this.maxSize : this.idleSize;
+        this.timeoutSeconds = timeoutSeconds;
 
         this.pool = new ArrayBlockingQueue<>(this.maxSize);
         this.storehouse = new MsgStorehouse(1024 > this.maxSize ? 1024 : this.maxSize);
@@ -77,7 +84,7 @@ public class ClientPool implements Client {
 
         for (int i = 0; i < this.coreSize; i++) {
             try {
-                pool.put(new ClientImpl(this.host, this.port, this.storehouse));
+                pool.put(new ClientImpl(this.host, this.port, this.storehouse, this.timeoutSeconds));
                 aliveSize.incrementAndGet();
             } catch (InterruptedException e) {
                 logger.error(new FormattedMessage("create a new client to {}:{} failed", this.host, this.port), e);
@@ -127,7 +134,7 @@ public class ClientPool implements Client {
             if (null == client && aliveSize.get() < this.maxSize) {
                 try {
                     aliveSize.incrementAndGet();
-                    client = new ClientImpl(this.host, this.port, this.storehouse);
+                    client = new ClientImpl(this.host, this.port, this.storehouse, this.timeoutSeconds);
                 } catch (InterruptedException e) {
                     aliveSize.decrementAndGet();
 

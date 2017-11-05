@@ -26,7 +26,7 @@ public class Server implements InitializingBean, DisposableBean {
     @Value(value = "${ebmms.server.boss.count ?:1}")
     private int bossThreadCount;
 
-    @Value(value = "${ebmms.server.worker.count ?:10}")
+    @Value(value = "${ebmms.server.worker.count ?:20}")
     private int workerThreadCount;
 
     @Value(value = "${ebmms.server.worker.queue ?:128}")
