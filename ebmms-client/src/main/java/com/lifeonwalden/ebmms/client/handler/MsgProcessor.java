@@ -25,7 +25,7 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Response> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         Response msg = new Response();
         msg.setMsgId(ctx.channel().id().asLongText());
-        msg.setErrMsg("Unknown exception happened during tcp communication progress.");
+        msg.setErrMsg(cause.getMessage());
         logger.error(msg.getErrMsg(), cause);
 
         storehouse.put(msg.getMsgId(), msg);

@@ -23,7 +23,7 @@ public class MsgStorehouse<T> {
     public void put(String msgId, T msg) {
         BlockingQueue<T> queue = storehouse.get(msgId);
         if (null == queue) {
-            RuntimeException runtimeException = new RuntimeException("Can't find a message receiver.");
+            RuntimeException runtimeException = new RuntimeException("Can't find a message receiver for ".concat(msgId));
             logger.error(runtimeException);
             throw runtimeException;
         }
@@ -33,7 +33,7 @@ public class MsgStorehouse<T> {
     public T take(String msgId) {
         BlockingQueue<T> queue = storehouse.get(msgId);
         if (null == queue) {
-            RuntimeException runtimeException = new RuntimeException("Can't find a message holder.");
+            RuntimeException runtimeException = new RuntimeException("Can't find a message receiver for ".concat(msgId));
             logger.error(runtimeException);
             throw runtimeException;
         }

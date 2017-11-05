@@ -8,7 +8,7 @@ import java.util.List;
 public interface RemoteService {
     String getName();
 
-    void rememberMyName(String name);
+    String rememberMyName(String name);
 
     List<String> getList();
 

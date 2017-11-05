@@ -151,7 +151,6 @@ public class ClientPool implements Client {
                     } else {
                         aliveSize.decrementAndGet();
                     }
-                    System.out.print(" ".concat(String.valueOf(workingSize.get())));
                     workingSize.decrementAndGet();
                 } catch (InterruptedException e) {
                     logger.error("Failed to return connection back to pool", e);

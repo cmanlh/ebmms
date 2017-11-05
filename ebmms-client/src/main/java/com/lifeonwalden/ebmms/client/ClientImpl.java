@@ -1,6 +1,7 @@
 package com.lifeonwalden.ebmms.client;
 
 import com.lifeonwalden.ebmms.client.handler.MsgProcessor;
+import com.lifeonwalden.ebmms.client.handler.ReadTimeoutHandler;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.codec.RequestEncoder;
@@ -33,7 +34,8 @@ public class ClientImpl implements Client {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new ResponseDecoder())
+                        ch.pipeline().addLast(new ReadTimeoutHandler(5))
+                                .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8), new ResponseDecoder())
                                 .addLast(new LengthFieldPrepender(8), new RequestEncoder())
                                 .addLast(new MsgProcessor(storehouse));
                     }

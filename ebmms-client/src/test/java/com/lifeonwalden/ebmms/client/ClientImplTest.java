@@ -19,7 +19,6 @@ public class ClientImplTest {
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat("0"));
             request.setMethod("getName");
-            request.setService(RemoteService.class.getName().concat("0"));
             System.out.println(clientImpl.send(request).getResult());
             clientImpl.close();
         } catch (InterruptedException e) {
@@ -36,7 +35,9 @@ public class ClientImplTest {
             request.setMethod("rememberMyName");
             Object[] parameters = new Object[]{"tcp service called"};
             request.setParameters(parameters);
+            long start = System.currentTimeMillis();
             System.out.println(clientImpl.send(request).getResult());
+            System.out.println(System.currentTimeMillis() - start);
             clientImpl.close();
         } catch (InterruptedException e) {
             e.printStackTrace();

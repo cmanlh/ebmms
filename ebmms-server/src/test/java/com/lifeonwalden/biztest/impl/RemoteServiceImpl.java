@@ -20,8 +20,14 @@ public class RemoteServiceImpl implements RemoteService {
     }
 
     @Override
-    public void rememberMyName(String name) {
-        System.out.println(name);
+    public String rememberMyName(String name) {
+        System.out.println("Get request ".concat(name).concat(" @ ").concat((new Date()).toString()));
+        try {
+            Thread.sleep(Math.round(Math.random() * 5) * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return name;
     }
 
     @Override
