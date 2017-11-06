@@ -27,6 +27,11 @@ public class Request implements Serializable {
      */
     private Object[] parameters;
 
+    /**
+     * allowed maximum times of retry
+     */
+    private int maxRetryTimes;
+
     public String getMsgId() {
         return msgId;
     }
@@ -65,5 +70,13 @@ public class Request implements Serializable {
         this.parameters = parameters;
 
         return this;
+    }
+
+    public int getMaxRetryTimes() {
+        return maxRetryTimes;
+    }
+
+    public void setMaxRetryTimes(int maxRetryTimes) {
+        this.maxRetryTimes = maxRetryTimes;
     }
 }
