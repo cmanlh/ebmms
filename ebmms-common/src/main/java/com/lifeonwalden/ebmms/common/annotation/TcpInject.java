@@ -20,7 +20,14 @@ public @interface TcpInject {
     int retry() default 1;
 
     /**
-     * timeout of service calling
+     * the service interface class
+     *
+     * @return
      */
-    int timeout() default 0;
+    Class serviceInterface();
+
+    /**
+     * Description
+     */
+    String description() default "";
 }
