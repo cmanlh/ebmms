@@ -19,6 +19,11 @@ public class Response implements Serializable {
     private Object result;
 
     /**
+     * return code
+     */
+    private int returnCode;
+
+    /**
      * error message when exception happened
      */
     private String errMsg;
@@ -41,6 +46,14 @@ public class Response implements Serializable {
         this.result = result;
 
         return this;
+    }
+
+    public int getReturnCode() {
+        return returnCode;
+    }
+
+    public void setReturnCode(int returnCode) {
+        this.returnCode = returnCode;
     }
 
     public String getErrMsg() {
