@@ -17,7 +17,7 @@ public class ClientImplTest {
         try {
             ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
             Request request = new Request();
-            request.setService(RemoteService.class.getName().concat("0"));
+            request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("getName");
             System.out.println(clientImpl.send(request).getResult());
             clientImpl.close();
@@ -31,7 +31,7 @@ public class ClientImplTest {
         try {
             ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
             Request request = new Request();
-            request.setService(RemoteService.class.getName().concat("0"));
+            request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("rememberMyName");
             Object[] parameters = new Object[]{"tcp service called"};
             request.setParameters(parameters);
@@ -49,7 +49,7 @@ public class ClientImplTest {
         try {
             ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
             Request request = new Request();
-            request.setService(RemoteService.class.getName().concat("0"));
+            request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("getList");
             request.setParameters(null);
             for (String word : (List<String>) clientImpl.send(request).getResult()) {
@@ -66,7 +66,7 @@ public class ClientImplTest {
         try {
             ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
             Request request = new Request();
-            request.setService(RemoteService.class.getName().concat("0"));
+            request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("mulityParameters");
             User user = new User();
             user.setName("John");
@@ -84,7 +84,7 @@ public class ClientImplTest {
         try {
             ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
             Request request = new Request();
-            request.setService(RemoteService.class.getName().concat("0"));
+            request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("mulityParameters");
             User user = new User();
             user.setName("John");
@@ -110,7 +110,7 @@ public class ClientImplTest {
         try {
             ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
             Request request = new Request();
-            request.setService(RemoteService.class.getName().concat("0"));
+            request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("mulityParameters");
             User user = new User();
             user.setName("John");

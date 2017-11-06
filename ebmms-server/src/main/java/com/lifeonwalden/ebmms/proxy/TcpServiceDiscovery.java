@@ -29,7 +29,7 @@ public class TcpServiceDiscovery implements ApplicationContextAware {
             TcpService service = that.appContext.findAnnotationOnBean(key, TcpService.class);
             TcpServiceBean tcpServiceBean = new TcpServiceBean();
             serviceList.add(tcpServiceBean.setDescription(service.description()).setVersion(service.version()).setServiceInterface(service.serviceInterface().getName()));
-            serviceIndex.put(tcpServiceBean.getServiceInterface().concat(String.valueOf(tcpServiceBean.getVersion())), value);
+            serviceIndex.put(tcpServiceBean.getServiceInterface().concat(":").concat(String.valueOf(tcpServiceBean.getVersion())), value);
         });
     }
 

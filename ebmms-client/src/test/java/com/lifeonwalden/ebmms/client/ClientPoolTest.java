@@ -13,7 +13,7 @@ public class ClientPoolTest {
     public void requesTest() {
         ClientPool clientPool = new ClientPool("localhost", 8080, 1);
         Request request = new Request();
-        request.setService(RemoteService.class.getName().concat("0"));
+        request.setService(RemoteService.class.getName().concat(":0"));
         request.setMethod("getName");
         System.out.println(clientPool.send(request).getResult());
         clientPool.close();
@@ -31,7 +31,7 @@ public class ClientPoolTest {
                 @Override
                 public void run() {
                     Request request = new Request();
-                    request.setService(RemoteService.class.getName().concat("0"));
+                    request.setService(RemoteService.class.getName().concat(":0"));
                     request.setMethod("rememberMyName");
                     String msg = "msg".concat(String.valueOf(index));
                     Object[] parameters = new Object[]{String.valueOf(msg)};
