@@ -17,7 +17,7 @@ public @interface TcpInject {
     /**
      * allowed maximum times of retry
      */
-    int retry() default 1;
+    int maxRetryTimes() default 1;
 
     /**
      * the service interface class
