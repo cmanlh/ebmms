@@ -128,7 +128,7 @@ public class ClientPool implements Client {
         try {
             client = pool.poll(500, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Interrupted when trying to get a connection from pool.", e);
         }
         try {
             if (null == client && aliveSize.get() < this.maxSize) {
@@ -180,16 +180,23 @@ public class ClientPool implements Client {
     }
 
     /**
-     * TODO
-     * <p>
      * not safe implementation, maybe forget to close some connection
      */
     @Override
     public void close() {
-        pool.forEach(client -> {
-            client.close();
-            aliveSize.decrementAndGet();
-        });
+        do {
+            pool.forEach(client -> {
+                client.close();
+                aliveSize.decrementAndGet();
+            });
+            if (aliveSize.get() > 0) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    logger.error("Interrupted when waiting to close the connection pool.", e);
+                }
+            }
+        } while (aliveSize.get() > 0);
     }
 
     @Override
