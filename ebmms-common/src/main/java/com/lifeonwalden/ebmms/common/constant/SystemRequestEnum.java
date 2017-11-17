@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum SystemRequestEnum {
-    NIL("0"), HEART_BIT("1"), SERVICE_REGISTER("2"), SERVICE_DISCOVERY("3"), SERVICE_CALLED_INFO("4"), SERVICE_RESPONSIVE_INFO("4");
+    NIL("0"), HEART_BIT("1"), SERVICE_REGISTER("2"), SERVICE_DISCOVERY("3"), SERVICE_CALLED_INFO("4"), SERVICE_RESPONSIVE_INFO("5");
     private static final Map<String, SystemRequestEnum> codeMapping = new HashMap<>();
 
     static {

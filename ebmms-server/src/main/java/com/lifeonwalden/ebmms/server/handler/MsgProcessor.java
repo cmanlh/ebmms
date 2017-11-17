@@ -53,5 +53,6 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Request> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         ctx.close();
+        logger.error(cause);
     }
 }

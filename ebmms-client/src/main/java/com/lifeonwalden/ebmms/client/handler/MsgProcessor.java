@@ -2,6 +2,7 @@ package com.lifeonwalden.ebmms.client.handler;
 
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
+import com.lifeonwalden.ebmms.common.constant.ReturnCodeEnum;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,7 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Response> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Response msg) throws Exception {
+        msg.setReturnCode(ReturnCodeEnum.SUCCESS.getValue());
         storehouse.put(msg.getMsgId(), msg);
     }
 
@@ -26,6 +28,7 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Response> {
         Response msg = new Response();
         msg.setMsgId(ctx.channel().id().asLongText());
         msg.setErrMsg(cause.getMessage());
+        msg.setReturnCode(ReturnCodeEnum.FAILED.getValue());
         logger.error(msg.getErrMsg(), cause);
 
         storehouse.put(msg.getMsgId(), msg);
