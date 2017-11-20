@@ -26,6 +26,8 @@ public class ClientImpl implements Client {
     private Channel channel;
     private EventLoopGroup group;
     private MsgStorehouse<Response> storehouse;
+    private String host;
+    private int port;
 
     public ClientImpl(String host, int port, MsgStorehouse<Response> storehouse, int timeoutSeconds) throws InterruptedException {
         group = new NioEventLoopGroup();
@@ -47,6 +49,8 @@ public class ClientImpl implements Client {
             throw e;
         }
         this.storehouse = storehouse;
+        this.host = host;
+        this.port = port;
     }
 
     @Override
@@ -71,6 +75,11 @@ public class ClientImpl implements Client {
     @Override
     public boolean isActive() {
         return channel.isActive();
+    }
+
+    @Override
+    public String getFamilyName() {
+        return this.host.concat(":").concat(String.valueOf(port));
     }
 
     @Override

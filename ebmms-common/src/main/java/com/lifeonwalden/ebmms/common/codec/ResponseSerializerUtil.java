@@ -17,6 +17,7 @@ public interface ResponseSerializerUtil {
             output.writeVarInt(encoded.length, true);
             output.writeBytes(encoded);
         }
+        output.writeVarInt(object.getReturnCode(), true);
         output.writeString(object.getErrMsg());
     }
 
@@ -27,6 +28,7 @@ public interface ResponseSerializerUtil {
         if (NULL != length) {
             response.setResult(KryoCoder.decodeWithClass(input.readBytes(length)));
         }
+        response.setReturnCode(input.readInt(true));
         response.setErrMsg(input.readString());
 
         return response;

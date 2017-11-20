@@ -1,5 +1,6 @@
 package com.lifeonwalden.ebmms.client.handler;
 
+import com.lifeonwalden.ebmms.client.exception.ReadTimeoutException;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
 import com.lifeonwalden.ebmms.common.constant.ReturnCodeEnum;
@@ -19,7 +20,6 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Response> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Response msg) throws Exception {
-        msg.setReturnCode(ReturnCodeEnum.SUCCESS.getValue());
         storehouse.put(msg.getMsgId(), msg);
     }
 
@@ -28,7 +28,11 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Response> {
         Response msg = new Response();
         msg.setMsgId(ctx.channel().id().asLongText());
         msg.setErrMsg(cause.getMessage());
-        msg.setReturnCode(ReturnCodeEnum.FAILED.getValue());
+        if (cause instanceof ReadTimeoutException) {
+            msg.setReturnCode(ReturnCodeEnum.CLIENT_OPERATION_TIMEOUT.getValue());
+        } else {
+            msg.setReturnCode(ReturnCodeEnum.UNKNOW_EXCEPTION.getValue());
+        }
         logger.error(msg.getErrMsg(), cause);
 
         storehouse.put(msg.getMsgId(), msg);

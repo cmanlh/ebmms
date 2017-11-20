@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ReturnCodeEnum {
-    NIL(0), SUCCESS(1), FAILED(2);
+    NIL(0), SUCCESS(1), CLIENT_OPERATION_TIMEOUT(2), SERVER_PROCESS_FAILED(3), UNKNOW_EXCEPTION(4);
     private static final Map<Integer, ReturnCodeEnum> codeMapping = new HashMap<>();
 
     static {

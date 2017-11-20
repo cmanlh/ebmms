@@ -2,6 +2,7 @@ package com.lifeonwalden.ebmms.server.handler;
 
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
+import com.lifeonwalden.ebmms.common.constant.ReturnCodeEnum;
 import com.lifeonwalden.ebmms.proxy.TcpServiceDiscovery;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -41,9 +42,11 @@ public class MsgProcessor extends SimpleChannelInboundHandler<Request> {
                 result = method.invoke(service);
             }
             response.setResult(result);
+            response.setReturnCode(ReturnCodeEnum.SUCCESS.getValue());
         } catch (Throwable e) {
             logger.error(new FormattedMessage("Failed to call service {}", msg.getService()), e);
 
+            response.setReturnCode(ReturnCodeEnum.SERVER_PROCESS_FAILED.getValue());
             response.setErrMsg(e.getMessage());
         }
 

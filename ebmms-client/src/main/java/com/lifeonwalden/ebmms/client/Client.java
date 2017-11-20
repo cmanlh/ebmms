@@ -31,6 +31,8 @@ public interface Client {
      */
     Response send(Request request, int retry, int timeout);
 
+    String getFamilyName();
+
     boolean isActive();
 
     void close();

@@ -179,6 +179,11 @@ public class ClientPool implements Client {
         return send(request);
     }
 
+    @Override
+    public String getFamilyName() {
+        return this.host.concat(":").concat(String.valueOf(port));
+    }
+
     /**
      * not safe implementation, maybe forget to close some connection
      */
