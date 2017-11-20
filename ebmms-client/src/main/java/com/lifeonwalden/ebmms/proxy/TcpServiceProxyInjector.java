@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Component
@@ -24,7 +25,9 @@ public class TcpServiceProxyInjector implements BeanPostProcessor {
         Arrays.asList(fields).forEach(field -> {
             TcpInject tcpInject = field.getAnnotation(TcpInject.class);
             if (null != tcpInject) {
-                Object service = ProxyFactory.getProxy(field.getType(), new TcpServiceClientInterceptor());
+                //TODO
+                String serviceName = tcpInject.serviceInterface().getName().concat(":").concat(String.valueOf(tcpInject.version()));
+                Object service = ProxyFactory.getProxy(field.getType(), new TcpServiceClientInterceptor(new ArrayList<>()));
                 try {
                     ReflectionUtils.makeAccessible(field);
                     field.set(bean, service);
