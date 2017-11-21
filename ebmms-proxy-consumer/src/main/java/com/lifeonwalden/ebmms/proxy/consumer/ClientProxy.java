@@ -1,4 +1,4 @@
-package com.lifeonwalden.ebmms.proxy;
+package com.lifeonwalden.ebmms.proxy.consumer;
 
 import com.lifeonwalden.ebmms.client.Client;
 

@@ -1,10 +1,10 @@
-package com.lifeonwalden.ebmms.proxy.intercept;
+package com.lifeonwalden.ebmms.proxy.consumer.intercept;
 
 import com.lifeonwalden.ebmms.client.Client;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.util.UUID;
-import com.lifeonwalden.ebmms.proxy.ClientProxy;
+import com.lifeonwalden.ebmms.proxy.consumer.ClientProxy;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 

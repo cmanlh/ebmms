@@ -1,7 +1,7 @@
-package com.lifeonwalden.ebmms.proxy;
+package com.lifeonwalden.ebmms.proxy.consumer;
 
 import com.lifeonwalden.ebmms.common.annotation.TcpInject;
-import com.lifeonwalden.ebmms.proxy.intercept.TcpServiceClientInterceptor;
+import com.lifeonwalden.ebmms.proxy.consumer.intercept.TcpServiceClientInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.aop.framework.ProxyFactory;
