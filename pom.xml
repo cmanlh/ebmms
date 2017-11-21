@@ -56,5 +56,6 @@
         <module>ebmms-proxy-producer</module>
         <module>ebmms-server</module>
         <module>ebmms-register</module>
+        <module>ebmms-liaison</module>
     </modules>
 </project>
