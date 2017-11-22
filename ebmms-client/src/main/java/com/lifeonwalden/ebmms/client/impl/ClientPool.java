@@ -4,6 +4,7 @@ import com.lifeonwalden.ebmms.client.Client;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
+import com.lifeonwalden.ebmms.common.util.ServiceUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
@@ -24,7 +25,7 @@ public class ClientPool implements Client {
     /**
      * allowed maximum size of client
      */
-    private int maxSize = 1;
+    private int maxSize = Integer.MAX_VALUE;
     /**
      * allowed core size of client
      */
@@ -182,7 +183,7 @@ public class ClientPool implements Client {
 
     @Override
     public String getFamilyName() {
-        return this.host.concat(":").concat(String.valueOf(port));
+        return ServiceUtil.fetchHostName(this.host, this.port);
     }
 
     /**
@@ -208,5 +209,32 @@ public class ClientPool implements Client {
     @Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (null == obj) {
+            return false;
+        }
+
+        if (!(obj instanceof ClientPool)) {
+            return false;
+        }
+
+        ClientPool _obj = (ClientPool) obj;
+        if (((null == this.host && null == _obj.host) || this.host.equals(_obj.host)) && this.port == _obj.port) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(this.port).concat(this.host).hashCode();
     }
 }

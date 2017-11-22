@@ -8,6 +8,7 @@ import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.codec.RequestEncoder;
 import com.lifeonwalden.ebmms.common.codec.ResponseDecoder;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
+import com.lifeonwalden.ebmms.common.util.ServiceUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -80,7 +81,7 @@ public class ClientImpl implements Client {
 
     @Override
     public String getFamilyName() {
-        return this.host.concat(":").concat(String.valueOf(port));
+        return ServiceUtil.fetchHostName(this.host, this.port);
     }
 
     @Override
@@ -93,5 +94,32 @@ public class ClientImpl implements Client {
             group.shutdownGracefully();
         }
 
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (null == obj) {
+            return false;
+        }
+
+        if (!(obj instanceof ClientImpl)) {
+            return false;
+        }
+
+        ClientImpl _obj = (ClientImpl) obj;
+        if (((null == this.host && null == _obj.host) || this.host.equals(_obj.host)) && this.port == _obj.port) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(this.port).concat(this.host).hashCode();
     }
 }

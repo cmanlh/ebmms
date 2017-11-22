@@ -2,6 +2,7 @@ package com.lifeonwalden.ebmms.proxy;
 
 import com.lifeonwalden.ebmms.common.annotation.TcpService;
 import com.lifeonwalden.ebmms.common.bean.register.TcpServiceBean;
+import com.lifeonwalden.ebmms.common.util.ServiceUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -29,7 +30,7 @@ public class TcpServiceDiscovery implements ApplicationContextAware {
             TcpService service = that.appContext.findAnnotationOnBean(key, TcpService.class);
             TcpServiceBean tcpServiceBean = new TcpServiceBean();
             serviceList.add(tcpServiceBean.setDescription(service.description()).setVersion(service.version()).setServiceInterface(service.serviceInterface().getName()));
-            serviceIndex.put(tcpServiceBean.getServiceInterface().concat(":").concat(String.valueOf(tcpServiceBean.getVersion())), value);
+            serviceIndex.put(ServiceUtil.fetchServiceName(tcpServiceBean.getServiceInterface(), tcpServiceBean.getVersion()), value);
         });
     }
 

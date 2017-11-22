@@ -1,6 +1,7 @@
 package com.lifeonwalden.ebmms.proxy.consumer;
 
 import com.lifeonwalden.ebmms.common.annotation.TcpInject;
+import com.lifeonwalden.ebmms.common.util.ServiceUtil;
 import com.lifeonwalden.ebmms.proxy.consumer.intercept.TcpServiceClientInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +27,7 @@ public class TcpServiceProxyInjector implements BeanPostProcessor {
             TcpInject tcpInject = field.getAnnotation(TcpInject.class);
             if (null != tcpInject) {
                 //TODO
-                String serviceName = tcpInject.serviceInterface().getName().concat(":").concat(String.valueOf(tcpInject.version()));
+                String serviceName = ServiceUtil.fetchServiceName(tcpInject.serviceInterface().getName(),tcpInject.version());
                 Object service = ProxyFactory.getProxy(field.getType(), new TcpServiceClientInterceptor(new ArrayList<>()));
                 try {
                     ReflectionUtils.makeAccessible(field);
