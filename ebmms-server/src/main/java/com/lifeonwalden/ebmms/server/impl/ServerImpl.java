@@ -1,7 +1,8 @@
-package com.lifeonwalden.ebmms.server;
+package com.lifeonwalden.ebmms.server.impl;
 
 import com.lifeonwalden.ebmms.common.codec.RequestDecoder;
 import com.lifeonwalden.ebmms.common.codec.ResponseEncoder;
+import com.lifeonwalden.ebmms.server.Server;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

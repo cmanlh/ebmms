@@ -2,6 +2,7 @@ package com.lifeonwalden.ebmms.server;
 
 import com.lifeonwalden.ebmms.proxy.TcpServiceDiscovery;
 import com.lifeonwalden.ebmms.server.handler.MsgProcessor;
+import com.lifeonwalden.ebmms.server.impl.ServerImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
@@ -26,7 +27,7 @@ public class Producer implements InitializingBean, DisposableBean {
     @Value(value = "${ebmms.server.host ?:127.0.0.1}")
     private String host;
 
-    @Value(value = "${ebmms.server.port ?:8080}")
+    @Value(value = "${ebmms.server.port ?:9600}")
     private int port;
 
     @Autowired

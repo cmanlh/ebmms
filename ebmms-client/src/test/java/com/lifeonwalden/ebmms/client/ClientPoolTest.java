@@ -1,6 +1,7 @@
 package com.lifeonwalden.ebmms.client;
 
 import com.lifeonwalden.biztest.RemoteService;
+import com.lifeonwalden.ebmms.client.impl.ClientPool;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ClientPoolTest {
     @Test
     public void requesTest() {
-        ClientPool clientPool = new ClientPool("localhost", 8080, 1);
+        ClientPool clientPool = new ClientPool("localhost", 9600, 1);
         Request request = new Request();
         request.setService(RemoteService.class.getName().concat(":0"));
         request.setMethod("getName");
@@ -21,7 +22,7 @@ public class ClientPoolTest {
 
     @Test
     public void multiRequesTest() {
-        ClientPool clientPool = new ClientPool("localhost", 8080, 10, 1024, 50, 15);
+        ClientPool clientPool = new ClientPool("localhost", 9600, 10, 1024, 50, 15);
         AtomicInteger counter = new AtomicInteger(0);
         AtomicInteger failedCounter = new AtomicInteger(0);
         List<Thread> threadList = new ArrayList<>();

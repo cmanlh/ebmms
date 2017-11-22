@@ -1,5 +1,6 @@
-package com.lifeonwalden.ebmms.client;
+package com.lifeonwalden.ebmms.client.impl;
 
+import com.lifeonwalden.ebmms.client.Client;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;

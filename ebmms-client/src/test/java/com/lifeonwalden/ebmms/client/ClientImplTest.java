@@ -3,6 +3,7 @@ package com.lifeonwalden.ebmms.client;
 import com.lifeonwalden.biztest.RemoteService;
 import com.lifeonwalden.biztest.bean.Trade;
 import com.lifeonwalden.biztest.bean.User;
+import com.lifeonwalden.ebmms.client.impl.ClientImpl;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class ClientImplTest {
     @Test
     public void getStringTest() {
         try {
-            ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
+            ClientImpl clientImpl = new ClientImpl("localhost", 9600, new MsgStorehouse(1024), 5);
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("getName");
@@ -29,7 +30,7 @@ public class ClientImplTest {
     @Test
     public void passStringTest() {
         try {
-            ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
+            ClientImpl clientImpl = new ClientImpl("localhost", 9600, new MsgStorehouse(1024), 5);
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("rememberMyName");
@@ -47,7 +48,7 @@ public class ClientImplTest {
     @Test
     public void getListStringTest() {
         try {
-            ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
+            ClientImpl clientImpl = new ClientImpl("localhost", 9600, new MsgStorehouse(1024), 5);
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("getList");
@@ -64,7 +65,7 @@ public class ClientImplTest {
     @Test
     public void mulityParametersTest() {
         try {
-            ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
+            ClientImpl clientImpl = new ClientImpl("localhost", 9600, new MsgStorehouse(1024), 5);
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("mulityParameters");
@@ -82,7 +83,7 @@ public class ClientImplTest {
     @Test
     public void complicatedMulityParametersTest() {
         try {
-            ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
+            ClientImpl clientImpl = new ClientImpl("localhost", 9600, new MsgStorehouse(1024), 5);
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("mulityParameters");
@@ -108,7 +109,7 @@ public class ClientImplTest {
     @Test
     public void invalidMethodSignTest() {
         try {
-            ClientImpl clientImpl = new ClientImpl("localhost", 8080, new MsgStorehouse(1024), 5);
+            ClientImpl clientImpl = new ClientImpl("localhost", 9600, new MsgStorehouse(1024), 5);
             Request request = new Request();
             request.setService(RemoteService.class.getName().concat(":0"));
             request.setMethod("mulityParameters");

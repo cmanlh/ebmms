@@ -55,7 +55,8 @@
         <module>ebmms-proxy-consumer</module>
         <module>ebmms-proxy-producer</module>
         <module>ebmms-server</module>
-        <module>ebmms-register</module>
+        <module>ebmms-register-interface</module>
         <module>ebmms-liaison</module>
+        <module>ebmms-register-server</module>
     </modules>
 </project>
