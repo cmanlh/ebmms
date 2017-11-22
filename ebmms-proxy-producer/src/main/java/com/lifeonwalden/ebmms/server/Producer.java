@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component;
 public class Producer implements InitializingBean, DisposableBean {
     private final static Logger logger = LogManager.getLogger(Producer.class);
 
-    @Value(value = "${ebmms.server.boss.count ?:1}")
+    @Value(value = "${ebmms.server.boss.count:#{1}}")
     private int bossThreadCount;
 
-    @Value(value = "${ebmms.server.worker.count ?:20}")
+    @Value(value = "${ebmms.server.worker.count:#{20}}")
     private int workerThreadCount;
 
-    @Value(value = "${ebmms.server.worker.queue ?:128}")
+    @Value(value = "${ebmms.server.worker.queue:#{128}}")
     private int workerBackLogSize;
 
-    @Value(value = "${ebmms.server.host ?:127.0.0.1}")
+    @Value(value = "${ebmms.server.host:127.0.0.1}")
     private String host;
 
-    @Value(value = "${ebmms.server.port ?:9600}")
+    @Value(value = "${ebmms.server.port:#{9600}}")
     private int port;
 
     @Autowired

@@ -3,7 +3,9 @@ package com.lifeonwalden.ebmms.proxy;
 import com.lifeonwalden.ebmms.common.annotation.TcpService;
 import com.lifeonwalden.ebmms.common.bean.register.TcpServiceBean;
 import com.lifeonwalden.ebmms.common.util.ServiceUtil;
+import com.lifeonwalden.ebmms.liaison.Liaison;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,9 @@ import java.util.Map;
 
 @Component
 public class TcpServiceDiscovery implements ApplicationContextAware {
+    @Autowired
+    private Liaison liaison;
+
     private ApplicationContext appContext;
 
     private Map<String, Object> serviceIndex = new HashMap<>();
@@ -32,6 +37,8 @@ public class TcpServiceDiscovery implements ApplicationContextAware {
             serviceList.add(tcpServiceBean.setDescription(service.description()).setVersion(service.version()).setServiceInterface(service.serviceInterface().getName()));
             serviceIndex.put(ServiceUtil.fetchServiceName(tcpServiceBean.getServiceInterface(), tcpServiceBean.getVersion()), value);
         });
+
+        liaison.registerProducer(this.serviceList);
     }
 
     public Map<String, Object> getServiceIndex() {

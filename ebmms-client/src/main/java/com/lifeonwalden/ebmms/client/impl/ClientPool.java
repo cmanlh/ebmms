@@ -29,11 +29,11 @@ public class ClientPool implements Client {
     /**
      * allowed core size of client
      */
-    private int coreSize = 1;
+    private int coreSize;
     /**
      * allowed idle size of client
      */
-    private int idleSize = 1;
+    private int idleSize;
     /**
      * current size of alive client
      */
@@ -88,8 +88,8 @@ public class ClientPool implements Client {
             try {
                 pool.put(new ClientImpl(this.host, this.port, this.storehouse, this.timeoutSeconds));
                 aliveSize.incrementAndGet();
-            } catch (InterruptedException e) {
-                logger.error(new FormattedMessage("create a new client to {}:{} failed", this.host, this.port), e);
+            } catch (Throwable e) {
+                logger.error(new FormattedMessage("Failed to create a new client to {}:{}", this.host, this.port), e);
 
                 throw new RuntimeException(e);
             }
@@ -137,10 +137,10 @@ public class ClientPool implements Client {
                 try {
                     aliveSize.incrementAndGet();
                     client = new ClientImpl(this.host, this.port, this.storehouse, this.timeoutSeconds);
-                } catch (InterruptedException e) {
+                } catch (Throwable e) {
                     aliveSize.decrementAndGet();
 
-                    logger.error(new FormattedMessage("create a new client to {}:{} failed", this.host, this.port), e);
+                    logger.error(new FormattedMessage("Failed to create a new client to {}:{}", this.host, this.port), e);
 
                     throw new RuntimeException(e);
                 }
