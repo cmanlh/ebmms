@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.lifeonwalden</groupId>
-            <artifactId>ebmms-proxy-producer</artifactId>
+            <artifactId>ebmms-server</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

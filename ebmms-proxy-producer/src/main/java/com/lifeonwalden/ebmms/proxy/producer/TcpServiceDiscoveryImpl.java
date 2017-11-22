@@ -1,9 +1,10 @@
-package com.lifeonwalden.ebmms.proxy;
+package com.lifeonwalden.ebmms.proxy.producer;
 
 import com.lifeonwalden.ebmms.common.annotation.TcpService;
 import com.lifeonwalden.ebmms.common.bean.register.TcpServiceBean;
 import com.lifeonwalden.ebmms.common.util.ServiceUtil;
 import com.lifeonwalden.ebmms.liaison.Liaison;
+import com.lifeonwalden.ebmms.server.handler.TcpServiceDiscovery;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TcpServiceDiscovery implements ApplicationContextAware {
+public class TcpServiceDiscoveryImpl implements TcpServiceDiscovery, ApplicationContextAware {
     @Autowired
     private Liaison liaison;
 
@@ -30,7 +31,7 @@ public class TcpServiceDiscovery implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.appContext = applicationContext;
 
-        final TcpServiceDiscovery that = this;
+        final TcpServiceDiscoveryImpl that = this;
         that.appContext.getBeansWithAnnotation(TcpService.class).forEach((key, value) -> {
             TcpService service = that.appContext.findAnnotationOnBean(key, TcpService.class);
             TcpServiceBean tcpServiceBean = new TcpServiceBean();
@@ -41,10 +42,12 @@ public class TcpServiceDiscovery implements ApplicationContextAware {
         liaison.registerProducer(this.serviceList);
     }
 
+    @Override
     public Map<String, Object> getServiceIndex() {
         return serviceIndex;
     }
 
+    @Override
     public List<TcpServiceBean> getServiceList() {
         return serviceList;
     }

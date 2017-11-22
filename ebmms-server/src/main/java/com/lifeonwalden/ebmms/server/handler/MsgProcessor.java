@@ -3,7 +3,6 @@ package com.lifeonwalden.ebmms.server.handler;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
 import com.lifeonwalden.ebmms.common.constant.ReturnCodeEnum;
-import com.lifeonwalden.ebmms.proxy.TcpServiceDiscovery;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.logging.log4j.LogManager;

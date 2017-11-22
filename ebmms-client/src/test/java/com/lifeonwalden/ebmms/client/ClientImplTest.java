@@ -5,6 +5,7 @@ import com.lifeonwalden.biztest.bean.Trade;
 import com.lifeonwalden.biztest.bean.User;
 import com.lifeonwalden.ebmms.client.impl.ClientImpl;
 import com.lifeonwalden.ebmms.common.bean.Request;
+import com.lifeonwalden.ebmms.common.bean.register.ServiceConsumerBean;
 import com.lifeonwalden.ebmms.common.concurrent.MsgStorehouse;
 import org.junit.Test;
 
@@ -13,6 +14,23 @@ import java.util.Date;
 import java.util.List;
 
 public class ClientImplTest {
+    @Test
+    public void pingRegisterServer() {
+        try {
+            ClientImpl clientImpl = new ClientImpl("localhost", 9610, new MsgStorehouse(1024), 5);
+            Request request = new Request();
+            request.setService("com.lifeonwalden.ebmms.register.service.RegisterLiaison".concat(":0"));
+            request.setMethod("fetchServiceProvider");
+            ServiceConsumerBean consumerBean = new ServiceConsumerBean();
+            consumerBean.setHostName("127.0.0.1:6321");
+            consumerBean.setServiceName("test");
+            request.setParameters(new Object[]{consumerBean});
+            System.out.println(clientImpl.send(request).getResult());
+            clientImpl.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     @Test
     public void getStringTest() {
         try {

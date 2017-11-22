@@ -41,7 +41,7 @@ public class TcpServiceBean implements Serializable {
     /**
      * is the service available
      */
-    private boolean available;
+    private boolean available = true;
 
     public long getId() {
         return id;

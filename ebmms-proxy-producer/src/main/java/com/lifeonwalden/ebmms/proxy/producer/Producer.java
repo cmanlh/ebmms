@@ -1,8 +1,8 @@
-package com.lifeonwalden.ebmms.server;
+package com.lifeonwalden.ebmms.proxy.producer;
 
-import com.lifeonwalden.ebmms.proxy.TcpServiceDiscovery;
-import com.lifeonwalden.ebmms.server.handler.MsgProcessor;
+import com.lifeonwalden.ebmms.server.Server;
 import com.lifeonwalden.ebmms.server.impl.ServerImpl;
+import com.lifeonwalden.ebmms.server.handler.TcpServiceDiscovery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
@@ -37,7 +37,7 @@ public class Producer implements InitializingBean, DisposableBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.server = new ServerImpl<>(this.bossThreadCount, this.workerThreadCount, this.host, this.port, this.workerBackLogSize, new MsgProcessor(this.tcpServiceDiscovery));
+        this.server = new ServerImpl(this.bossThreadCount, this.workerThreadCount, this.host, this.port, this.workerBackLogSize, this.tcpServiceDiscovery);
     }
 
     @Override

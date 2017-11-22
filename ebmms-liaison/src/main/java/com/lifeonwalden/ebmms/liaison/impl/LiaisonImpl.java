@@ -41,9 +41,6 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
     @Value(value = "${ebmms.liaison.register.port:#{9610}}")
     private int registerPort;
 
-    @Value(value = "${ebmms.liaison.register.self:#{false}}")
-    private boolean isRegister;
-
     @Value(value = "${ebmms.liaison.timeoutSeconds:#{15}}")
     private int timeoutSeconds;
 
@@ -107,10 +104,6 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
 
     @Override
     public void registerProducer(List<TcpServiceBean> serviceList) {
-        if (isRegister) {
-            return;
-        }
-
         ProducerServiceBean producerServiceBean = new ProducerServiceBean();
         producerServiceBean.setHost(this.host);
         producerServiceBean.setPort(this.port);
