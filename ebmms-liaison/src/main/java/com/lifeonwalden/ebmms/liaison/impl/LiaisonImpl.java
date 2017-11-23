@@ -57,46 +57,30 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
 
     private Map<String, Client> producerCache = new ConcurrentHashMap<>();
 
+    private Map<String, List<ServiceProducerBean>> producerMapping = new HashMap<>();
+
     private Client client;
 
     @Override
     public List<Client> fetchProducer(String serviceName) {
         List<Client> producerList = serviceProducerCache.get(serviceName);
         if (null == producerList) {
-            ServiceConsumerBean serviceConsumerBean = new ServiceConsumerBean();
-            serviceConsumerBean.setHostName(ServiceUtil.fetchServiceName(RegisterLiaison.class.getName(), 0));
-            serviceConsumerBean.setServiceName(serviceName);
+            List<ServiceProducerBean> serviceProducerList = this.producerMapping.get(serviceName);
+            if (null == serviceProducerList) {
+                ServiceConsumerBean serviceConsumerBean = new ServiceConsumerBean();
+                serviceConsumerBean.setHostName(ServiceUtil.fetchServiceName(RegisterLiaison.class.getName(), 0));
+                serviceConsumerBean.setServiceName(serviceName);
 
-            Request request = new Request();
-            request.setMethod("fetchServiceProvider").setService(ServiceUtil.fetchServiceName(RegisterLiaison.class.getName(), 0)).setParameters(new Object[]{serviceConsumerBean});
-            Response response = this.client.send(request);
-            if (response.getReturnCode() == ReturnCodeEnum.SUCCESS.getValue()) {
-                final List<Client> _producerList = new ArrayList<>();
-                ((List<ServiceProducerBean>) response.getResult()).forEach(serviceProducerBean -> {
-                    String hostName = ServiceUtil.fetchHostName(serviceProducerBean.getHost(), serviceProducerBean.getPort());
-                    Client client = producerCache.get(hostName);
-                    if (null == client) {
-                        client = new ClientPool(serviceProducerBean.getHost(), serviceProducerBean.getPort());
-                        producerCache.put(hostName, client);
-                    }
-                    _producerList.add(client);
-                });
-
-                if (!serviceProducerCache.containsKey(serviceName)) {
-                    synchronized (serviceProducerCache) {
-                        if (!serviceProducerCache.containsKey(serviceName)) {
-                            producerList = _producerList;
-                            serviceProducerCache.put(serviceName, producerList);
-                        } else {
-                            producerList = serviceProducerCache.get(serviceName);
-                        }
-                    }
+                Request request = new Request();
+                request.setMethod("fetchServiceProvider").setService(ServiceUtil.fetchServiceName(RegisterLiaison.class.getName(), 0)).setParameters(new Object[]{serviceConsumerBean});
+                Response response = this.client.send(request);
+                if (response.getReturnCode() == ReturnCodeEnum.SUCCESS.getValue()) {
+                    serviceProducerList = (List<ServiceProducerBean>) response.getResult();
                 } else {
-                    producerList = serviceProducerCache.get(serviceName);
+                    throw new RuntimeException("Failed to fetch service producer from service register, for ".concat(response.getErrMsg()));
                 }
-            } else {
-                throw new RuntimeException("Failed to fetch service producer from service register, for ".concat(response.getErrMsg()));
             }
+            refreshProducerCache(serviceName, serviceProducerList);
         }
 
         return producerList;
@@ -115,7 +99,7 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
         Response response = this.client.send(request);
 
         if (response.getReturnCode() == ReturnCodeEnum.SUCCESS.getValue()) {
-            refreshProducerCache((Map<String, List<ServiceProducerBean>>) response.getResult());
+            this.producerMapping = (Map<String, List<ServiceProducerBean>>) response.getResult();
         } else {
             throw new RuntimeException("Failed to setup connection with service register, for ".concat(response.getErrMsg()));
         }
@@ -131,7 +115,34 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
         this.client.close();
     }
 
+    private void refreshProducerCache(String serviceName, List<ServiceProducerBean> serviceProducerList) {
+        final List<Client> _producerList = new ArrayList<>();
+        serviceProducerList.forEach(serviceProducerBean -> {
+            String hostName = ServiceUtil.fetchHostName(serviceProducerBean.getHost(), serviceProducerBean.getPort());
+            Client client = producerCache.get(hostName);
+            if (null == client) {
+                client = new ClientPool(serviceProducerBean.getHost(), serviceProducerBean.getPort());
+                producerCache.putIfAbsent(hostName, client);
+            }
+            _producerList.add(client);
+        });
+
+        if (!serviceProducerCache.containsKey(serviceName)) {
+            synchronized (serviceProducerCache) {
+                if (!serviceProducerCache.containsKey(serviceName)) {
+                    producerList = _producerList;
+                    serviceProducerCache.put(serviceName, producerList);
+                } else {
+                    producerList = serviceProducerCache.get(serviceName);
+                }
+            }
+        } else {
+            producerList = serviceProducerCache.get(serviceName);
+        }
+    }
+
     private void refreshProducerCache(Map<String, List<ServiceProducerBean>> producerMapping) {
+        final String localHostName = ServiceUtil.fetchHostName(this.host, this.port);
         synchronized (serviceProducerCache) {
             TreeSet<String> availableProducer = new TreeSet<>();
 
