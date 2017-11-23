@@ -81,6 +81,7 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
                 }
             }
             refreshProducerCache(serviceName, serviceProducerList);
+            producerList = serviceProducerCache.get(serviceName);
         }
 
         return producerList;
@@ -116,28 +117,34 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
     }
 
     private void refreshProducerCache(String serviceName, List<ServiceProducerBean> serviceProducerList) {
-        final List<Client> _producerList = new ArrayList<>();
+        final String localHostName = ServiceUtil.fetchHostName(this.host, this.port);
+
+        final List<Client> producerList = new ArrayList<>();
         serviceProducerList.forEach(serviceProducerBean -> {
             String hostName = ServiceUtil.fetchHostName(serviceProducerBean.getHost(), serviceProducerBean.getPort());
+            if (localHostName.equals(hostName)) {
+                return;
+            }
             Client client = producerCache.get(hostName);
             if (null == client) {
                 client = new ClientPool(serviceProducerBean.getHost(), serviceProducerBean.getPort());
-                producerCache.putIfAbsent(hostName, client);
+                if (producerCache.putIfAbsent(hostName, client) == null) {
+                    producerList.add(client);
+                } else {
+                    producerList.add(producerCache.get(hostName));
+                    client.close();
+                }
+            } else {
+                producerList.add(client);
             }
-            _producerList.add(client);
         });
 
         if (!serviceProducerCache.containsKey(serviceName)) {
             synchronized (serviceProducerCache) {
                 if (!serviceProducerCache.containsKey(serviceName)) {
-                    producerList = _producerList;
                     serviceProducerCache.put(serviceName, producerList);
-                } else {
-                    producerList = serviceProducerCache.get(serviceName);
                 }
             }
-        } else {
-            producerList = serviceProducerCache.get(serviceName);
         }
     }
 

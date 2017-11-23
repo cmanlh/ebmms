@@ -20,6 +20,11 @@ public @interface TcpInject {
     int maxRetryTimes() default 1;
 
     /**
+     * seconds to timeout
+     */
+    int timeoutSeconds() default 15;
+
+    /**
      * the service interface class
      *
      * @return

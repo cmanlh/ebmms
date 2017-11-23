@@ -2,22 +2,26 @@ package com.lifeonwalden.ebmms.proxy.consumer;
 
 import com.lifeonwalden.ebmms.common.annotation.TcpInject;
 import com.lifeonwalden.ebmms.common.util.ServiceUtil;
+import com.lifeonwalden.ebmms.liaison.Liaison;
 import com.lifeonwalden.ebmms.proxy.consumer.intercept.TcpServiceClientInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Component
 public class TcpServiceProxyInjector implements BeanPostProcessor {
     private final static Logger logger = LogManager.getLogger(TcpServiceProxyInjector.class);
+
+    @Autowired
+    private Liaison liaison;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -26,9 +30,8 @@ public class TcpServiceProxyInjector implements BeanPostProcessor {
         Arrays.asList(fields).forEach(field -> {
             TcpInject tcpInject = field.getAnnotation(TcpInject.class);
             if (null != tcpInject) {
-                //TODO
-                String serviceName = ServiceUtil.fetchServiceName(tcpInject.serviceInterface().getName(),tcpInject.version());
-                Object service = ProxyFactory.getProxy(field.getType(), new TcpServiceClientInterceptor(new ArrayList<>()));
+                String serviceName = ServiceUtil.fetchServiceName(tcpInject.serviceInterface().getName(), tcpInject.version());
+                Object service = ProxyFactory.getProxy(field.getType(), new TcpServiceClientInterceptor(serviceName, tcpInject.maxRetryTimes(), tcpInject.timeoutSeconds(), liaison));
                 try {
                     ReflectionUtils.makeAccessible(field);
                     field.set(bean, service);

@@ -3,44 +3,52 @@ package com.lifeonwalden.ebmms.proxy.consumer.intercept;
 import com.lifeonwalden.ebmms.client.Client;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import com.lifeonwalden.ebmms.common.bean.Response;
-import com.lifeonwalden.ebmms.common.util.UUID;
+import com.lifeonwalden.ebmms.common.constant.ReturnCodeEnum;
+import com.lifeonwalden.ebmms.liaison.Liaison;
 import com.lifeonwalden.ebmms.proxy.consumer.ClientProxy;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TcpServiceClientInterceptor implements MethodInterceptor, ClientProxy {
-    private List<? extends Client> clients;
+    private final static Logger logger = LogManager.getLogger(TcpServiceClientInterceptor.class);
 
-    public TcpServiceClientInterceptor(List<? extends Client> clients) {
-        this.clients = clients;
-    }
+    private Liaison liaison;
+    private String serviceName;
+    private AtomicInteger counter = new AtomicInteger(0);
+    private int maxRetryTimes;
+    private int timeoutSeconds;
 
-    @Override
-    public void refresh(List<? extends Client> clients) {
-        this.clients = clients;
+    public TcpServiceClientInterceptor(String serviceName, int maxRetryTimes, int timeoutSeconds, Liaison liaison) {
+        this.liaison = liaison;
+        this.serviceName = serviceName;
+        this.maxRetryTimes = maxRetryTimes;
+        this.timeoutSeconds = timeoutSeconds;
     }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Method method = invocation.getMethod();
-        System.out.println(method.getName());
+        Request request = new Request();
+        request.setMethod(method.getName()).setService(this.serviceName);
+        request.setTimeoutSeconds(this.timeoutSeconds);
         Object[] arguments = invocation.getArguments();
-        if (null != arguments) {
-            for (Object obj : arguments) {
-                if (null != obj) {
-                    System.out.println(obj.getClass().getName());
-                    if (obj instanceof Request) {
-                        System.out.println(((Request) obj).getMsgId());
-                    }
-                }
-            }
+        if (null != arguments && arguments.length > 0) {
+            request.setParameters(arguments);
         }
 
-        Response response = new Response();
-        response.setMsgId(UUID.fetch());
-        return response;
+        List<? extends Client> producerList = liaison.fetchProducer(this.serviceName);
+        Client client = producerList.get(counter.getAndIncrement() % producerList.size());
+        Response response = client.send(request);
+        if (ReturnCodeEnum.SUCCESS.getValue() == response.getReturnCode()) {
+            return response.getResult();
+        } else {
+            return null;
+        }
     }
 }

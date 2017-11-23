@@ -22,8 +22,8 @@ public class ClientImplTest {
             request.setService("com.lifeonwalden.ebmms.register.service.RegisterLiaison".concat(":0"));
             request.setMethod("fetchServiceProvider");
             ServiceConsumerBean consumerBean = new ServiceConsumerBean();
-            consumerBean.setHostName("127.0.0.1:6321");
-            consumerBean.setServiceName("test");
+            consumerBean.setHostName("127.0.0.1:9600");
+            consumerBean.setServiceName("com.lifeonwalden.biztest.RemoteService:0");
             request.setParameters(new Object[]{consumerBean});
             System.out.println(clientImpl.send(request).getResult());
             clientImpl.close();

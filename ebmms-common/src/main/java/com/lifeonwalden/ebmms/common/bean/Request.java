@@ -28,9 +28,9 @@ public class Request implements Serializable {
     private Object[] parameters;
 
     /**
-     * allowed maximum times of retry
+     * seconds to timeout
      */
-    private int maxRetryTimes;
+    private int timeoutSeconds;
 
     public String getMsgId() {
         return msgId;
@@ -72,11 +72,11 @@ public class Request implements Serializable {
         return this;
     }
 
-    public int getMaxRetryTimes() {
-        return maxRetryTimes;
+    public int getTimeoutSeconds() {
+        return timeoutSeconds;
     }
 
-    public void setMaxRetryTimes(int maxRetryTimes) {
-        this.maxRetryTimes = maxRetryTimes;
+    public void setTimeoutSeconds(int timeoutSeconds) {
+        this.timeoutSeconds = timeoutSeconds;
     }
 }

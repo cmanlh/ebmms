@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientPoolTest {
@@ -25,6 +26,7 @@ public class ClientPoolTest {
         ClientPool clientPool = new ClientPool("localhost", 9600, 10, 1024, 50, 15);
         AtomicInteger counter = new AtomicInteger(0);
         AtomicInteger failedCounter = new AtomicInteger(0);
+        Random random = new Random();
         List<Thread> threadList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             final int index = i;
@@ -32,6 +34,7 @@ public class ClientPoolTest {
                 @Override
                 public void run() {
                     Request request = new Request();
+                    request.setTimeoutSeconds(random.nextInt(15));
                     request.setService(RemoteService.class.getName().concat(":0"));
                     request.setMethod("rememberMyName");
                     String msg = "msg".concat(String.valueOf(index));

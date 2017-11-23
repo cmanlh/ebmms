@@ -1,17 +1,17 @@
 package com.lifeonwalden.ebmms.client.handler;
 
 import com.lifeonwalden.ebmms.client.exception.ReadTimeoutException;
+import com.lifeonwalden.ebmms.common.constant.BizConstant;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ReadTimeoutHandler extends ChannelDuplexHandler {
     private Timer timer;
-
     private int timeoutSeconds;
-
     private TimerTask timerTask;
 
     public ReadTimeoutHandler(int timeoutSeconds) {
@@ -35,6 +35,11 @@ public class ReadTimeoutHandler extends ChannelDuplexHandler {
                 ctx.close();
             }
         };
-        this.timer.schedule(this.timerTask, this.timeoutSeconds * 1000);
+        Integer _timeoutSeconds = ctx.channel().<Integer>attr(AttributeKey.valueOf(BizConstant.TIMEOUT_SECONDS_KEY)).get();
+        int seconds = this.timeoutSeconds;
+        if (null != _timeoutSeconds) {
+            seconds = _timeoutSeconds;
+        }
+        this.timer.schedule(this.timerTask, seconds * 1000);
     }
 }
