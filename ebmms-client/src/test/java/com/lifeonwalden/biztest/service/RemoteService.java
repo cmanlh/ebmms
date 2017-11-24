@@ -1,4 +1,4 @@
-package com.lifeonwalden.biztest;
+package com.lifeonwalden.biztest.service;
 
 import com.lifeonwalden.biztest.bean.Trade;
 import com.lifeonwalden.biztest.bean.User;

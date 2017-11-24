@@ -1,8 +1,8 @@
-package com.lifeonwalden.biztest.impl;
+package com.lifeonwalden.biztest.service.impl;
 
-import com.lifeonwalden.biztest.RemoteService;
 import com.lifeonwalden.biztest.bean.Trade;
 import com.lifeonwalden.biztest.bean.User;
+import com.lifeonwalden.biztest.service.RemoteService;
 import com.lifeonwalden.ebmms.common.annotation.TcpService;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@TcpService(serviceInterface = RemoteService.class)
+@TcpService(serviceInterface = RemoteService.class, version = 0)
 @Service
 public class RemoteServiceImpl implements RemoteService {
     @Override

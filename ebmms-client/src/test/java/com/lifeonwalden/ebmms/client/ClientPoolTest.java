@@ -1,6 +1,6 @@
 package com.lifeonwalden.ebmms.client;
 
-import com.lifeonwalden.biztest.RemoteService;
+import com.lifeonwalden.biztest.service.RemoteService;
 import com.lifeonwalden.ebmms.client.impl.ClientPool;
 import com.lifeonwalden.ebmms.common.bean.Request;
 import org.junit.Test;

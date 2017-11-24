@@ -25,7 +25,7 @@ public class ClientPool implements Client {
     /**
      * allowed maximum size of client
      */
-    private int maxSize = Integer.MAX_VALUE;
+    private int maxSize = 1024;
     /**
      * allowed core size of client
      */
@@ -59,11 +59,11 @@ public class ClientPool implements Client {
     private MsgStorehouse<Response> storehouse;
 
     public ClientPool(String host, int port) {
-        this(host, port, 1, 1, 1, 15);
+        this(host, port, 1, 1024, 1, 15);
     }
 
     public ClientPool(String host, int port, int timeoutSeconds) {
-        this(host, port, 1, 1, 1, timeoutSeconds);
+        this(host, port, 1, 1024, 1, timeoutSeconds);
     }
 
     public ClientPool(String host, int port, int coreSize, int timeoutSeconds) {

@@ -1,6 +1,6 @@
 package com.lifeonwalden.ebmms.client;
 
-import com.lifeonwalden.biztest.RemoteService;
+import com.lifeonwalden.biztest.service.RemoteService;
 import com.lifeonwalden.biztest.bean.Trade;
 import com.lifeonwalden.biztest.bean.User;
 import com.lifeonwalden.ebmms.client.impl.ClientImpl;
@@ -23,7 +23,7 @@ public class ClientImplTest {
             request.setMethod("fetchServiceProvider");
             ServiceConsumerBean consumerBean = new ServiceConsumerBean();
             consumerBean.setHostName("127.0.0.1:9600");
-            consumerBean.setServiceName("com.lifeonwalden.biztest.RemoteService:0");
+            consumerBean.setServiceName("com.lifeonwalden.biztest.service.RemoteService:0");
             request.setParameters(new Object[]{consumerBean});
             System.out.println(clientImpl.send(request).getResult());
             clientImpl.close();

@@ -47,7 +47,7 @@ public class LiaisonImpl implements Liaison, InitializingBean, DisposableBean {
     @Value(value = "${ebmms.server.host:127.0.0.1}")
     private String host;
 
-    @Value(value = "${ebmms.server.port:#{9600}}")
+    @Value(value = "${ebmms.server.port:#{-1}}")
     private int port;
 
     @Value(value = "${ebmms.heartbeat.gap:#{5000}}")
