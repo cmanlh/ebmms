@@ -42,13 +42,19 @@ public class TcpServiceClientInterceptor implements MethodInterceptor, ClientPro
             request.setParameters(arguments);
         }
 
-        List<? extends Client> producerList = liaison.fetchProducer(this.serviceName);
-        Client client = producerList.get(counter.getAndIncrement() % producerList.size());
-        Response response = client.send(request);
-        if (ReturnCodeEnum.SUCCESS.getValue() == response.getReturnCode()) {
-            return response.getResult();
-        } else {
-            return null;
+        int retryTime = 0;
+        while (retryTime++ <= this.maxRetryTimes) {
+            List<? extends Client> producerList = liaison.fetchProducer(this.serviceName);
+            int currentSize = producerList.size();
+            if (currentSize > 0) {
+                Client client = producerList.get(counter.getAndIncrement() % currentSize);
+                Response response = client.send(request);
+                if (ReturnCodeEnum.SUCCESS.getValue() == response.getReturnCode()) {
+                    return response.getResult();
+                }
+            }
         }
+
+        throw new RuntimeException("Failed to call remote service ".concat(this.serviceName));
     }
 }
